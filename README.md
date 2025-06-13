@@ -175,3 +175,171 @@ from [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 where
     t1.intermediario is null;
 ```
 ---
+
+## 📏 Validación de Longitudes de Campos
+```sql
+-- codigo_plan_negocio_especial
+IF EXISTS (SELECT 1 
+           FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 
+           WHERE LEN(CAST(t1.codigo_plan_negocio_especial AS VARCHAR)) > 4)
+BEGIN
+    UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+    SET codigo_plan_negocio_especial = CAST(LEFT(CAST(codigo_plan_negocio_especial AS VARCHAR), 4) AS NUMERIC)
+    WHERE LEN(CAST(codigo_plan_negocio_especial AS VARCHAR)) > 4
+END
+```
+
+```sql
+-- poliza
+IF EXISTS (SELECT 1 
+           FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 
+           WHERE LEN(CAST(t1.poliza AS VARCHAR(50))) > 50)
+BEGIN
+    UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+    SET poliza = CAST(LEFT(CAST(poliza AS VARCHAR(50)), 50) AS NUMERIC)
+    WHERE LEN(CAST(poliza AS VARCHAR(50))) > 50
+END
+```
+
+```sql
+-- certificado
+IF EXISTS (SELECT 1 
+           FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 
+           WHERE LEN(t1.certificado) > 50)
+BEGIN
+    UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+    SET certificado = SUBSTRING(certificado, 1, 50)
+    WHERE LEN(certificado) > 50
+END
+```
+
+```sql
+ -- fecha_inicio_poliza
+IF EXISTS (SELECT 1 
+           FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] 
+           WHERE LEN(CAST(fecha_inicio_poliza AS VARCHAR(8))) > 8)
+BEGIN
+    UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+    SET fecha_inicio_poliza = CAST(SUBSTRING(CAST(fecha_inicio_poliza AS VARCHAR(8)), 1, 8) AS NUMERIC)
+    WHERE LEN(CAST(fecha_inicio_poliza AS VARCHAR(8))) > 8
+END
+```
+
+```sql
+-- fecha_fin_poliza
+IF EXISTS (SELECT 1 
+           FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] 
+           WHERE LEN(CAST(fecha_fin_poliza AS VARCHAR(8))) > 8)
+BEGIN
+    UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+    SET fecha_fin_poliza = CAST(SUBSTRING(CAST(fecha_fin_poliza AS VARCHAR(8)), 1, 8) AS NUMERIC)
+    WHERE LEN(CAST(fecha_fin_poliza AS VARCHAR(8))) > 8
+END
+```
+
+```sql
+-- Placa
+IF EXISTS (SELECT 1 
+           FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] 
+           WHERE LEN(Placa) > 50)
+BEGIN
+    UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+    SET Placa = SUBSTRING(Placa, 1, 50)
+    WHERE LEN(Placa) > 50
+END
+```
+---
+
+## 🗂️ Formato de los campos
+
+```sql
+-- codigo_plan_negocio_especial 
+IF((SELECT COUNT(*) FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 WHERE (ISNUMERIC(t1.codigo_plan_negocio_especial) = 0) ) > 0)
+BEGIN 
+    UPDATE t1 
+    SET t1.NUMERROR = 1, t1.DESCERROR = DESCERROR + 'motivo: formato incorrecto' 
+    FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 WHERE ISNUMERIC(t1.codigo_plan_negocio_especial) = 0
+END
+```
+
+```sql
+-- poliza 
+IF((SELECT COUNT(*) FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1  WHERE (ISNUMERIC(t1.poliza) = 0) ) > 0)
+BEGIN 
+    UPDATE t1 
+    SET t1.NUMERROR = 1,  t1.DESCERROR = DESCERROR + 'motivo: formato incorrecto' 
+    FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 WHERE ISNUMERIC(t1.poliza) = 0
+END
+```
+
+```sql
+-- certificado 
+IF((SELECT COUNT(*) FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1  WHERE (ISNUMERIC(t1.certificado) = 0) ) > 0)
+BEGIN 
+    UPDATE t1 
+    SET t1.NUMERROR = 1,  t1.DESCERROR = DESCERROR + 'motivo: formato incorrecto' 
+    FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 WHERE ISNUMERIC(t1.certificado) = 0
+END
+```
+
+```sql
+-- fecha_inicio_poliza 
+IF((SELECT COUNT(*) FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 WHERE (ISDATE(t1.fecha_inicio_poliza) = 0) )> 0)
+BEGIN 
+    UPDATE t1 
+    SET t1.NUMERROR = 1, t1.DESCERROR = DESCERROR + 'motivo: formato incorrecto' 
+    FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 WHERE ISDATE(t1.fecha_inicio_poliza) = 0
+END
+```
+---
+
+## --- 3. Eliminación de caracteres especiales
+```sql
+set dateformat dmy --- para establecer el formato de fecha
+
+## -- Primera Actualización: Eliminar salto de línea de cada campo especificado
+UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+SET 
+    [codigo_plan_negocio_especial] = REPLACE(REPLACE(REPLACE([codigo_plan_negocio_especial], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [cod_sucursal] = REPLACE(REPLACE(REPLACE([cod_sucursal], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [cod_ramo] = REPLACE(REPLACE(REPLACE([cod_ramo], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [ramo] = REPLACE(REPLACE(REPLACE([ramo], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [poliza] = REPLACE(REPLACE(REPLACE([poliza], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [certificado] = REPLACE(REPLACE(REPLACE([certificado], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [fecha_inicio_poliza] = REPLACE(REPLACE(REPLACE([fecha_inicio_poliza], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [fecha_fin_poliza] = REPLACE(REPLACE(REPLACE([fecha_fin_poliza], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [nro_identificacion_tomador] = REPLACE(REPLACE(REPLACE([nro_identificacion_tomador], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [nombre_tomador] = REPLACE(REPLACE(REPLACE([nombre_tomador], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [nro_identificacion_asegurado] = REPLACE(REPLACE(REPLACE([nro_identificacion_asegurado], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [nombre_asegurado] = REPLACE(REPLACE(REPLACE([nombre_asegurado], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [amparo_garantia] = REPLACE(REPLACE(REPLACE([amparo_garantia], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [descripcion_amparo_garantia] = REPLACE(REPLACE(REPLACE([descripcion_amparo_garantia], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [direccion_riesgo] = REPLACE(REPLACE(REPLACE([direccion_riesgo], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [departamento_riesgo] = REPLACE(REPLACE(REPLACE([departamento_riesgo], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [ciudad_riesgo] = REPLACE(REPLACE(REPLACE([ciudad_riesgo], CHAR(9), ''), CHAR(10), ''), CHAR(13), ''),
+    [intermediario] = REPLACE(REPLACE(REPLACE([intermediario], CHAR(9), ''), CHAR(10), ''), CHAR(13), '');
+```
+```sql
+## -- Segunda Actualización: -- Este script eliminará los caracteres especiales
+
+UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+SET
+ [codigo_plan_negocio_especial] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([codigo_plan_negocio_especial], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[cod_sucursal] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([cod_sucursal], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[cod_ramo] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([cod_ramo], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[ramo] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([ramo], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[poliza] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([poliza], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[certificado] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([certificado], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[fecha_inicio_poliza] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([fecha_inicio_poliza], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[fecha_fin_poliza] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([fecha_fin_poliza], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[nro_identificacion_tomador] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([nro_identificacion_tomador], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[nombre_tomador] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([nombre_tomador], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[nro_identificacion_asegurado] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([nro_identificacion_asegurado], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[nombre_asegurado] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([nombre_asegurado], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[amparo_garantia] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([amparo_garantia], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[descripcion_amparo_garantia] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([descripcion_amparo_garantia], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[direccion_riesgo] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([direccion_riesgo], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[departamento_riesgo] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([departamento_riesgo], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[ciudad_riesgo] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([ciudad_riesgo], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),   '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', ''),
+[intermediario] = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE([intermediario], CHAR(39), ''), CHAR(34), ''), CHAR(33), ''), ',', ''),  '&', ''), '/', ''), '*', ''), '+', ''), '[', ''), ']', ''), '\\', ''), '¡', ''), '!', ''), '¿', ''), '?', ''), '$', ''), '#', ''), '%', ''), '|', ''), '°', ''), '{', ''), '}', ''), '´', ''), '(', ''), ')', '');
+```
