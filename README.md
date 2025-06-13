@@ -9,9 +9,6 @@ Estos scripts reflejan buenas prácticas en diseño, optimización y mantenimien
 
 ---
 
-| Script                      | Descripción                                               | Base de datos | Versión |
-| --------------------------- | --------------------------------------------------------- | ------------- | ------- |
-| `grant_prdn_privileges.sql` | Otorga GRANT SELECT y EXECUTE en objetos del esquema PRDN | Oracle        | 1.0     |
 
 ## 🔐 Otorgamiento de privilegios en el esquema `PRDN`
 
@@ -39,10 +36,6 @@ WHERE
 
 ---
 
-| Script Name                      | Autor                   | Descripción                                                                                 | Base de Datos | Versión |
-| -------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------- |
-| `dbOzono_access_and_cleanup.sql` | Wily Duvan Villamil Rey | Crea el usuario `Leadpasivos`, asigna privilegios a `usrDivisasRead` y elimina una función. | PostgreSQL    | 1.0     |
-
 ## 👨‍💼 Acceso y limpieza en la base de datos `dbOzono`
 
 ```sql
@@ -63,10 +56,6 @@ DROP FUNCTION IF EXISTS flujos_cdt.registrotipo1(VARCHAR);
 ```
 
 ---
-
-| Script Name                 | Autor                   | Descripción                                                                                       | Base de Datos | Versión |
-| --------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- | ------------- | ------- |
-| `session_lock_analysis.sql` | Wily Duvan Villamil Rey | Identifica sesiones bloqueadas en SQL Server, mostrando detalles del recurso y consulta afectada. | SQL Server    | 1.0     |
 
 ## 📌 Identificación de sesiones bloqueadas en SQL Server
 
