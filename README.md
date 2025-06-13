@@ -1,14 +1,54 @@
-# 📁 Scripts SQL Profesionales para Proyectos Reales
+# 📁 Scripts SQL Profesionales para Proyectos del Mundo Real
 
-¡Hola! Soy **Wily Duvan Villamil Rey** — Administrador de Bases de Datos e Ingeniero de Datos Junior 💻📊.
-En este espacio comparto scripts que he aplicado en entornos reales, desarrollados para organizaciones de alto impacto como **Alkosto**, **BTG Pactual**, **CEIPA**, **Cardio Infantil**, **Novaventa**, **Metro de Medellín**, entre otros 🏢🚀.
+¡Hola, comunidad de datos! 👋  
+Soy **Wily Duvan Villamil Rey**, Administrador de Bases de Datos e Ingeniero de Datos Junior 💻📊
 
-Estos scripts reflejan buenas prácticas en diseño, optimización y mantenimiento de bases de datos, con enfoque en herramientas como **Oracle 18c XE**, **PostgreSQL** **SQL Server** y más.
+En este espacio comparto fragmentos de código **usados en entornos reales**, que han generado valor para organizaciones como:
 
-🧠 **Mi objetivo:** proporcionar soluciones claras, eficientes y escalables, aplicables a contextos reales del mundo empresarial y académico.
+🏢 **Alkosto** &nbsp;|&nbsp; 🏦 **BTG Pactual** &nbsp;|&nbsp; 🎓 **CEIPA** &nbsp;|&nbsp; ❤️ **Fundación Cardioinfantil**  
+🛒 **Novaventa** &nbsp;|&nbsp; 🚈 **Metro de Medellín**, entre otras.
 
 ---
 
+## 🧰 ¿Qué encontrarás aquí?
+
+🔹 Scripts SQL para **limpieza y estandarización de datos**  
+🔹 Validaciones de **estructura y calidad**  
+🔹 Manejo de **duplicados**  
+🔹 Conversión de **tipos de datos y fechas**  
+🔹 Gestión avanzada de **bloqueos en Oracle**  
+🔹 Buenas prácticas en desarrollo **ETL**
+
+---
+
+# 🚀 Stack Tecnológico  
+🎯 Rol: **Administrador de Bases de Datos Junior**
+
+💾 SQL Server   •   🐘 PostgreSQL   •   🏛️ Oracle   •   🐬 MySQL Workbench
+🐿️ DBeaver   •   🛠️ HeidiSQL   •   📊 SQL Developer
+☁️ Azure   •   📈 Grafana
+🧾 Jira   •   🛡️ GLPI
+🔍 Power Query   •   🔁 ETL
+🐙 GitHub
+
+---
+
+## 🧠 ¿Qué obtienes trabajando conmigo?
+
+✔️ Scripts profesionales listos para entornos reales  
+✔️ Optimización de consultas y procesos  
+✔️ Mejora continua en la calidad de datos  
+✔️ Enfoque en escalabilidad y rendimiento  
+✔️ Soporte en procesos ETL y analítica empresarial
+
+---
+
+## 🎯 Mi propósito
+
+> Brindar soluciones **claras, eficientes y escalables**, útiles tanto en el **mundo académico** como en el **sector empresarial**.  
+> Mi enfoque: **optimizar procesos, prevenir errores y mejorar la calidad de los datos desde la base**.
+
+---
 
 ## 🔐 Otorgamiento de privilegios en el esquema `PRDN`
 
@@ -493,4 +533,19 @@ ORDER BY
 ```
 
 ---
+
+---
+
+## 🙌 Gracias por visitar
+
+Este repositorio nace de experiencias reales, retos del día a día y una pasión genuina por los datos.  
+Si algún script te resultó útil o interesante, ¡me encantaría saberlo!
+
+> _"La calidad de los datos es la base de decisiones inteligentes."_
+
+📫 Contacto directo: **willyvillamil861@gmail.com**  
+🔗 LinkedIn: [www.linkedin.com/in/wily-rey-administrador-bases-datos-junior](https://www.linkedin.com/in/wily-rey-administrador-bases-datos-junior)
+
+⭐ Si te gustó el contenido, considera darle una estrella al repositorio. ¡Tu apoyo impulsa más aportes!
+
 
