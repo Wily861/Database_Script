@@ -12,8 +12,6 @@ Estos scripts reflejan buenas prácticas en diseño, optimización y mantenimien
 
 ## 🔐 Otorgamiento de privilegios en el esquema `PRDN`
 
-Otorga privilegios `SELECT` sobre TABLAS y VISTAS, y `EXECUTE` sobre PROCEDIMIENTOS del esquema `PRDN` al usuario `SERV_APP`:
-
 ```sql
 -- Otorga privilegios SELECT sobre TABLAS y VISTAS del esquema PRDN
 SELECT
@@ -93,7 +91,6 @@ ORDER BY
 
 ## 🛠️ Modificaciones estructurales y de formato en columnas
 
-## 🔄 Cambio temporal del tipo de dato para transformación (fecha_fin_poliza)
 
 ```sql
 -- Alterar temporalmente la columna 'fecha_fin_poliza' a tipo VARCHAR(8)
@@ -101,15 +98,11 @@ ALTER TABLE dbo.Temp_Hdi_Generales_ETL
 ALTER COLUMN fecha_fin_poliza VARCHAR(8);
 ```
 
-## 🧾 Formatear fecha al estándar YYYYMMDD
-
 ```sql
 -- Convertir los datos de la columna 'fecha_fin_poliza' al formato 'YYYYMMDD'
 UPDATE dbo.Temp_Hdi_Generales_ETL
 SET fecha_fin_poliza = CONVERT(VARCHAR(8), CONVERT(DATE, fecha_fin_poliza), 112);
 ```
-
-## 🔐 Reestablecer tipo de dato como NUMERIC(8,0)
 
 ```sql
 -- Alterar la columna 'fecha_fin_poliza' nuevamente a tipo NUMERIC(8, 0)
@@ -117,15 +110,11 @@ ALTER TABLE dbo.Temp_Hdi_Generales_ETL
 ALTER COLUMN fecha_fin_poliza NUMERIC(8, 0);
 ```
 
-## 🗓️ Cambio de tipo de la columna FechaFin a DATETIME
-
 ```sql
 -- Cambiar el tipo de la columna 'FechaFin' a DATETIME
 ALTER TABLE cAfiliadoHDI
 ALTER COLUMN FechaFin DATETIME;
 ```
-
-## 🔄 Conversión segura de datos en FechaFin al tipo DATETIME
 
 ```sql
 -- Convertir los datos de la columna 'FechaFin' al tipo DATETIME
@@ -134,4 +123,55 @@ UPDATE cAfiliadoHDI
 SET FechaFin = TRY_CONVERT(DATETIME, FechaFin);
 ```
 ---
+## 🧹 Limpieza e Inicialización de Campos de Error
 
+```sql
+-- Inicializar la columna 'DESCERROR' donde su valor sea 'Ok'
+UPDATE [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL]
+SET DESCERROR = NULL
+WHERE DESCERROR = 'Ok';
+```
+
+```sql
+--Inicializar columnas 'DESCERROR' y 'NUMERROR' con valores vacíos
+UPDATE t1 
+SET DESCERROR = ''
+FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1;
+
+UPDATE t1 
+SET NUMERROR = ''
+FROM [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1;
+```
+---
+## 🗑️ Eliminación de Registros Vacíos o Nulos Masivos
+
+ ```sql
+-- Eliminar registros saltos de linea
+delete t1
+from [dbo].[Temp_HDI_SEGUROS_Base_AUTOS_ETL] t1 where 
+    t1.codigo_plan_negocio_especial is null and
+    t1.cod_sucursal is null and
+    t1.cod_ramo is null and
+    t1.ramo is null and
+    t1.poliza is null and
+    t1.certificado is null and
+    t1.fecha_inicio_poliza is null and
+    t1.fecha_fin_poliza is null and
+    t1.nro_identificacion_tomador is null and
+    t1.nombre_tomador is null and
+    t1.nro_identificacion_asegurado is null and
+    t1.nombre_asegurado is null and
+    t1.amparo_garantia is null and
+    t1.descripcion_amparo_garantia is null and
+    t1.Placa is null and
+    t1.modelo is null and
+    t1.marca is null and
+    t1.clase is null and
+    t1.tipo_de_vehiculo is null and
+    t1.chasis is null and
+    t1.direccion_riesgo is null and
+    t1.departamento_riesgo is null and
+    t1.ciudad_riesgo is null and
+    t1.intermediario is null;
+```
+---
