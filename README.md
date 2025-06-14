@@ -1,18 +1,18 @@
 # 📁 Scripts SQL Profesionales para Proyectos del Mundo Real
 
-¡Hola, comunidad de datos! 👋  
+>¡Hola, comunidad de datos! 👋  
 Soy **Wily Duvan Villamil Rey**, Administrador de Bases de Datos e Ingeniero de Datos Junior 💻📊
 
-En este espacio comparto fragmentos de código **usados en entornos reales**, que han generado valor para organizaciones como:
+>En este espacio comparto fragmentos de código **usados en entornos reales**, que han generado valor para organizaciones como:
 
-🏢 **Alkosto** &nbsp;|&nbsp; 🏦 **BTG Pactual** &nbsp;|&nbsp; 🎓 **CEIPA** &nbsp;|&nbsp; ❤️ **Fundación Cardioinfantil**  
+>🏢 **Alkosto** &nbsp;|&nbsp; 🏦 **BTG Pactual** &nbsp;|&nbsp; 🎓 **CEIPA** &nbsp;|&nbsp; ❤️ **Fundación Cardioinfantil**  
 🛒 **Novaventa** &nbsp;|&nbsp; 🚈 **Metro de Medellín**, entre otras.
 
 ---
 
 ## 🧰 ¿Qué encontrarás aquí?
 
-🔹 Scripts SQL para **limpieza y estandarización de datos**  
+>🔹 Scripts SQL para **limpieza y estandarización de datos**  
 🔹 Validaciones de **estructura y calidad**  
 🔹 Manejo de **duplicados**  
 🔹 Conversión de **tipos de datos y fechas**  
@@ -22,9 +22,9 @@ En este espacio comparto fragmentos de código **usados en entornos reales**, qu
 ---
 
 # 🚀 Stack Tecnológico  
-🎯 Rol: **Administrador de Bases de Datos Junior**
+>🎯 Rol: **Administrador de Bases de Datos Junior**
 
-💾 SQL Server   •   🐘 PostgreSQL   •   🏛️ Oracle   •   🐬 MySQL Workbench
+>💾 SQL Server   •   🐘 PostgreSQL   •   🏛️ Oracle   •   🐬 MySQL Workbench
 🐿️ DBeaver   •   🛠️ HeidiSQL   •   📊 SQL Developer
 ☁️ Azure   •   📈 Grafana
 🧾 Jira   •   🛡️ GLPI
@@ -35,7 +35,7 @@ En este espacio comparto fragmentos de código **usados en entornos reales**, qu
 
 ## 🧠 ¿Qué obtienes trabajando conmigo?
 
-✔️ Scripts profesionales listos para entornos reales  
+> ✔️ Scripts profesionales listos para entornos reales  
 ✔️ Optimización de consultas y procesos  
 ✔️ Mejora continua en la calidad de datos  
 ✔️ Enfoque en escalabilidad y rendimiento  
